@@ -52,7 +52,6 @@ from peft import (
     LoraConfig,
     TaskType,
     get_peft_model,
-    get_peft_model_state_dict,
 )
 
 # Import our utils from the same package
@@ -74,7 +73,7 @@ logger = logging.getLogger(__name__)
 
 
 # ─── Constants ────────────────────────────────────────────────────────────────
-BASE_MODEL = "google/t5-small"
+BASE_MODEL = "t5-small"  # transformers 5.x: no google/ prefix on Hub
 
 # LoRA hyperparameters — chosen to balance parameter efficiency with quality:
 #   r=8     : rank of the low-rank matrices. Higher → more capacity, more params.
@@ -262,14 +261,13 @@ def main():
         fp16=args.fp16 and device == "cuda",
 
         # Evaluation and checkpointing
-        evaluation_strategy="epoch",   # eval at end of each epoch
+        eval_strategy="epoch",         # eval at end of each epoch (renamed in transformers 5.x)
         save_strategy="epoch",         # save checkpoint each epoch
         load_best_model_at_end=True,   # restore best checkpoint at end
         metric_for_best_model="eval_loss",
         greater_is_better=False,
 
         # Logging
-        logging_dir=os.path.join(args.output_dir, "logs"),
         logging_steps=args.logging_steps,
         report_to="none",              # disable wandb/tensorboard by default
 
@@ -290,7 +288,7 @@ def main():
         args=training_args,
         train_dataset=tokenized_dataset["train"],
         eval_dataset=tokenized_dataset["validation"],
-        tokenizer=tokenizer,
+        processing_class=tokenizer,    # renamed from `tokenizer=` in transformers 5.x
         data_collator=data_collator,
         callbacks=[
             loss_logger,

@@ -29,7 +29,7 @@ from transformers import (
 logger = logging.getLogger(__name__)
 
 # ─── Constants ────────────────────────────────────────────────────────────────
-BASE_T5_MODEL = "google/t5-small"
+BASE_T5_MODEL = "t5-small"  # transformers 5.x: no google/ prefix on Hub
 BART_MODEL = "facebook/bart-large-cnn"
 
 # Generation hyperparameters — kept consistent across models for fair comparison

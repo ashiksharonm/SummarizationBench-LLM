@@ -29,6 +29,9 @@ SUMMARY_COL = "highlights"
 MAX_INPUT_TOKENS = 512
 MAX_TARGET_TOKENS = 128
 
+# Model identifier — transformers 5.x no longer uses 'google/' prefix on Hub
+BASE_T5_MODEL_ID = "t5-small"
+
 
 # ─── Text Cleaning ─────────────────────────────────────────────────────────────
 
@@ -131,16 +134,16 @@ def preprocess_function(
         padding="max_length",  # pad to max_length for uniform batch tensors
     )
 
-    # Tokenize targets (summaries) — use tokenizer as context manager for labels
-    with tokenizer.as_target_tokenizer():
-        labels = tokenizer(
-            targets,
-            max_length=max_target_length,
-            truncation=True,
-            padding="max_length",
-        )
+    # Tokenize targets (summaries) using text_target argument
+    # Note: as_target_tokenizer() was removed in transformers 5.x
+    labels = tokenizer(
+        text_target=targets,
+        max_length=max_target_length,
+        truncation=True,
+        padding="max_length",
+    )
 
-    # Replace padding token id (-100) so loss ignores padded label positions
+    # Replace padding token id with -100 so loss ignores padded label positions
     label_ids = [
         [(token if token != tokenizer.pad_token_id else -100) for token in label]
         for label in labels["input_ids"]
