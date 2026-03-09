@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+eggs/
+*.egg-info/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.env
+.venv
+ENV/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# HuggingFace / Model assets (large files — store on HF Hub, not git)
+fine_tuned_t5_lora/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# Training artifacts
+runs/
+wandb/
+logs/
+losses.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Secrets / API keys
+.env
+*.env
+secrets.yaml
+
+# Streamlit
+.streamlit/secrets.toml

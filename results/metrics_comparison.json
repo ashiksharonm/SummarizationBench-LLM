@@ -1,0 +1,32 @@
+{
+    "note": "This file is a placeholder. Run `python src/evaluate.py` after training to populate with real numbers.",
+    "results": [
+        {
+            "model": "T5-small (LoRA fine-tuned)",
+            "rouge1": "XX.XX",
+            "rouge2": "XX.XX",
+            "rougeL": "XX.XX",
+            "bleu": "X.XXXX",
+            "avg_latency_ms": "XXX.X",
+            "num_samples": 100
+        },
+        {
+            "model": "BART-large-CNN (pretrained)",
+            "rouge1": "XX.XX",
+            "rouge2": "XX.XX",
+            "rougeL": "XX.XX",
+            "bleu": "X.XXXX",
+            "avg_latency_ms": "XXX.X",
+            "num_samples": 100
+        },
+        {
+            "model": "Gemini 1.5 Pro",
+            "rouge1": "XX.XX",
+            "rouge2": "XX.XX",
+            "rougeL": "XX.XX",
+            "bleu": "X.XXXX",
+            "avg_latency_ms": "XXXX.X",
+            "num_samples": 100
+        }
+    ]
+}

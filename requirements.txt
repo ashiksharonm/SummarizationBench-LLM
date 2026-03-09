@@ -1,0 +1,26 @@
+# ─── Core ML / NLP ────────────────────────────────────────────────────────────
+torch>=2.1.0
+transformers>=4.38.0
+datasets>=2.18.0
+accelerate>=0.27.0
+peft>=0.9.0                  # LoRA / PEFT support
+
+# ─── Evaluation Metrics ────────────────────────────────────────────────────────
+rouge-score>=0.1.2
+nltk>=3.8.1
+evaluate>=0.4.1
+
+# ─── Google Gemini API ─────────────────────────────────────────────────────────
+google-generativeai>=0.5.0
+
+# ─── Streamlit Dashboard ───────────────────────────────────────────────────────
+streamlit>=1.32.0
+plotly>=5.19.0
+pandas>=2.0.0
+
+# ─── Utilities ─────────────────────────────────────────────────────────────────
+tqdm>=4.66.0
+numpy>=1.26.0
+python-dotenv>=1.0.0         # Load GEMINI_API_KEY from .env
+sentencepiece>=0.2.0         # T5 tokenizer dependency
+protobuf>=3.20.0             # Required by sentencepiece
