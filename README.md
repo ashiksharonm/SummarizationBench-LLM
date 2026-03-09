@@ -26,43 +26,8 @@ Full fine-tuning of T5-small requires updating all 60M parameters with gradients
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                     CNN/DailyMail                       │
-│              ~287K article-summary pairs                │
-└────────────────────────┬────────────────────────────────┘
-                         │
-          ┌──────────────▼──────────────┐
-          │        src/utils.py          │
-          │  • Data loading & cleaning   │
-          │  • T5 tokenization           │
-          │  • Label masking (-100)      │
-          └──────────────┬──────────────┘
-                         │
-          ┌──────────────▼──────────────┐
-          │        src/train.py          │
-          │  • T5-small + LoRA (PEFT)    │
-          │  • HuggingFace Trainer API   │
-          │  • Loss logged → losses.json │
-          │  • Adapter → ./fine_tuned/   │
-          └──────────────┬──────────────┘
-                         │
-          ┌──────────────▼──────────────┐
-          │      src/evaluate.py         │
-          │  • T5-LoRA  │ BART │ Gemini  │
-          │  • ROUGE-1/2/L + BLEU        │
-          │  • Latency profiling         │
-          │  • → results/metrics.json    │
-          └──────────────┬──────────────┘
-                         │
-          ┌──────────────▼──────────────┐
-          │        app/app.py            │
-          │  Streamlit dashboard          │
-          │  • 3-way summary panels      │
-          │  • Live metrics table        │
-          │  • Plotly latency chart      │
-          └─────────────────────────────┘
-```
+<img width="2158" height="512" alt="image" src="https://github.com/user-attachments/assets/4ce89919-9737-4639-952e-41f2e62b95d5" />
+
 
 ---
 
