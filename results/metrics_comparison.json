@@ -1,32 +1,56 @@
 {
-    "note": "This file is a placeholder. Run `python src/evaluate.py` after training to populate with real numbers.",
-    "results": [
+  "results": [
+    {
+      "model": "T5-small (LoRA fine-tuned)",
+      "rouge1": 0.3979,
+      "rouge2": 0.172,
+      "rougeL": 0.2779,
+      "bleu": 0.1093,
+      "avg_latency_ms": 2274.34,
+      "num_samples": 100,
+      "sample_predictions": [
         {
-            "model": "T5-small (LoRA fine-tuned)",
-            "rouge1": "XX.XX",
-            "rouge2": "XX.XX",
-            "rougeL": "XX.XX",
-            "bleu": "X.XXXX",
-            "avg_latency_ms": "XXX.X",
-            "num_samples": 100
+          "article_snippet": "(CNN) I see signs of a revolution everywhere. I see it in the op-ed pages of the newspapers, and on the state ballots in nearly half the country. I see it in politicians who once preferred to play it safe with this explosive issue but are now willing to stake their political futures on it. I see the\u2026",
+          "reference": "CNN's Dr. Sanjay Gupta says we should legalize medical marijuana now . He says he knows how easy it is do nothing \"because I did nothing for too long\"",
+          "prediction": "I see the revolution in the eyes of sterling scientists, previously reluctant to dip a toe into this heavily stigmatized world. For the first time a majority, 53%, favor its legalization, with 77% supporting it for medical purposes. I see it in the faces of good parents, uprooting their lives to get medicine for their children."
         },
         {
-            "model": "BART-large-CNN (pretrained)",
-            "rouge1": "XX.XX",
-            "rouge2": "XX.XX",
-            "rougeL": "XX.XX",
-            "bleu": "X.XXXX",
-            "avg_latency_ms": "XXX.X",
-            "num_samples": 100
+          "article_snippet": "He looks barely teenage. But this child has amassed thousands of Twitter followers with his pictorial updates of 'gang life'. The baby-faced boy from Memphis, Tennessee, poses with guns, cash, and bags of what looks like marijuana. Scroll down for video . Baby-faced: This little boy has amassed more\u2026",
+          "reference": "Child has amassed thousands of Twitter followers with 'gang life' photos . In one video he points gun at camera as adults look on unfazed . His tweets have prompted backlash with calls for intervention .",
+          "prediction": "The baby-faced boy from Memphis, Tennessee, poses with guns, cash, and bags of what looks like marijuana. In many pictures he laughs and points the gun at the camera in an apparent attempt to look menacing - as adults laugh in the background."
         },
         {
-            "model": "Gemini 1.5 Pro",
-            "rouge1": "XX.XX",
-            "rouge2": "XX.XX",
-            "rougeL": "XX.XX",
-            "bleu": "X.XXXX",
-            "avg_latency_ms": "XXXX.X",
-            "num_samples": 100
+          "article_snippet": "New Jersey Governor Chris Christie wasn't looking too presidential Tuesday night when he got into a heated debate with a veteran teacher at a town hall meeting. And now the state's largest teacher's union is calling him out for his 'bullying' behavior. 'He's always taken a very nasty and disrespectf\u2026",
+          "reference": "The presidential hopeful held a town hall meeting in Kenilworth on Tuesday . During the meeting, high school English teacher Kathy Mooney got up to ask the governor a question about pensions . She asked why he didn't seek a higher legal settlement in a case with ExxonMobil that would have contributed to the state's pension system . Christie responded by repeatedly asking how much Mooney knew about the deal instead of answering her question .",
+          "prediction": "New Jersey's largest teacher's union is calling Chris Christie out for his 'bullying' behavior. Mooney questioned Christie's motivations behind a $225million legal settlement with oil company ExxonMobil. The state originally wanted $8.9billion from the oil company, and Mooney says that would have had a huge impact on pensions for public employees."
         }
-    ]
+      ]
+    },
+    {
+      "model": "BART-large-CNN (pretrained)",
+      "rouge1": 0.432,
+      "rouge2": 0.2013,
+      "rougeL": 0.2985,
+      "bleu": 0.1254,
+      "avg_latency_ms": 8630.71,
+      "num_samples": 100,
+      "sample_predictions": [
+        {
+          "article_snippet": "(CNN) I see signs of a revolution everywhere. I see it in the op-ed pages of the newspapers, and on the state ballots in nearly half the country. I see it in politicians who once preferred to play it safe with this explosive issue but are now willing to stake their political futures on it. I see the\u2026",
+          "reference": "CNN's Dr. Sanjay Gupta says we should legalize medical marijuana now . He says he knows how easy it is do nothing \"because I did nothing for too long\"",
+          "prediction": "CNN's John Sutter says he sees signs of a medical marijuana revolution everywhere. For the first time a majority, 53%, favor its legalization, he says. Support for legalization has risen 11 points in the past few years alone. Sutter: \"Weed 3\" is eyewitnesses to a revolution in full swing."
+        },
+        {
+          "article_snippet": "He looks barely teenage. But this child has amassed thousands of Twitter followers with his pictorial updates of 'gang life'. The baby-faced boy from Memphis, Tennessee, poses with guns, cash, and bags of what looks like marijuana. Scroll down for video . Baby-faced: This little boy has amassed more\u2026",
+          "reference": "Child has amassed thousands of Twitter followers with 'gang life' photos . In one video he points gun at camera as adults look on unfazed . His tweets have prompted backlash with calls for intervention .",
+          "prediction": "Baby-faced boy from Memphis, Tennessee, has amassed more than 3,000 followers on Twitter. In many pictures he is smoking suspicious substances, with captions such as 'High Life' Tweets include the phrases, 'I need a bad b****', 'f*** da police', and 'gang sh** n****' He has prompted a wave of critics calling his stunts 'sad'"
+        },
+        {
+          "article_snippet": "New Jersey Governor Chris Christie wasn't looking too presidential Tuesday night when he got into a heated debate with a veteran teacher at a town hall meeting. And now the state's largest teacher's union is calling him out for his 'bullying' behavior. 'He's always taken a very nasty and disrespectf\u2026",
+          "reference": "The presidential hopeful held a town hall meeting in Kenilworth on Tuesday . During the meeting, high school English teacher Kathy Mooney got up to ask the governor a question about pensions . She asked why he didn't seek a higher legal settlement in a case with ExxonMobil that would have contributed to the state's pension system . Christie responded by repeatedly asking how much Mooney knew about the deal instead of answering her question .",
+          "prediction": "New Jersey Governor Chris Christie got into a heated debate with a teacher at a town hall meeting Tuesday night. Kathy Mooney, a high school English Teacher from Roselle Park, questioned Christie's motivations behind a $225million legal settlement with oil company ExxonMobil. 'He's always taken a very nasty and disrespectful tone with teachers and other individuals who dare to question him at these events,' Steve Wollmer of the NJ Education Association told NJ.com."
+        }
+      ]
+    }
+  ]
 }

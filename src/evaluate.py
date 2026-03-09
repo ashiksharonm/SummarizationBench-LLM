@@ -242,13 +242,13 @@ def main():
     all_results.append(t5_result)
 
     # ── 3. Evaluate BART ──────────────────────────────────────────────────
-    bart_pipeline = load_bart(device=device)
+    bart_model, bart_tokenizer = load_bart(device=device)
 
     bart_result = evaluate_model(
         model_name="BART-large-CNN (pretrained)",
         articles=articles,
         references=references,
-        predict_fn=lambda text: summarize_bart(text, bart_pipeline),
+        predict_fn=lambda text: summarize_bart(text, bart_model, bart_tokenizer, device=device),
     )
     all_results.append(bart_result)
 

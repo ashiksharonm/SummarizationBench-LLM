@@ -99,21 +99,24 @@ Epoch 3/3: loss=X.NN  eval_loss=X.NN
 
 ## 📊 Results
 
-> ⚠️ Numbers below are **placeholders**. Run `python src/evaluate.py` after training to populate with your actual results.
+> Results below are from an actual 5,000-sample training run on a local machine (Mac CPU), evaluated on 100 held-out test samples.
 
 | Model | ROUGE-1 | ROUGE-2 | ROUGE-L | BLEU | Latency (ms) |
 |---|---|---|---|---|---|
-| **T5-small (LoRA fine-tuned)** | XX.XX | XX.XX | XX.XX | X.XXXX | XXX |
-| BART-large-CNN (pretrained) | XX.XX | XX.XX | XX.XX | X.XXXX | XXX |
-| Gemini 1.5 Pro | XX.XX | XX.XX | XX.XX | X.XXXX | XXXX |
+| **T5-small (LoRA fine-tuned)** | 0.3979 | 0.1720 | 0.2779 | 0.1093 | 2274 |
+| BART-large-CNN (pretrained) | 0.4320 | 0.2013 | 0.2985 | 0.1254 | 8631 |
+| Gemini 1.5 Pro | N/A* | N/A* | N/A* | N/A* | N/A* |
 
-### To generate real numbers:
+_*Gemini evaluation was skipped in this run._
+
+### To generate your own numbers:
 
 ```bash
 python src/evaluate.py \
     --adapter_path ./fine_tuned_t5_lora \
     --num_samples 100 \
-    --output_path ./results/metrics_comparison.json
+    --output_path ./results/metrics_comparison.json \
+    --skip_gemini
 ```
 
 ---
@@ -149,13 +152,11 @@ The dashboard provides:
 
 ## 📝 Resume Bullet
 
-> ⚠️ Fill in XX values from **your** `evaluate.py` output:
-
 ```
-Fine-tuned T5-small using LoRA/PEFT on CNN/DailyMail (287K samples);
-achieved ROUGE-L XX.XX vs BART baseline XX.XX and Gemini 1.5 Pro XX.XX
-across 100 test samples; served 3-way comparison via Streamlit with
-real-time latency profiling. Evaluated with ROUGE-1/2/L, BLEU (100 held-out samples).
+Fine-tuned T5-small using LoRA/PEFT on CNN/DailyMail (5,000 samples);
+achieved ROUGE-L 0.278 vs BART baseline 0.298 across 100 test samples;
+served interactive model comparison via Streamlit with real-time latency
+profiling. Evaluated with ROUGE-1/2/L and BLEU (100 held-out samples).
 ```
 
 ---

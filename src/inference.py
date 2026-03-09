@@ -23,7 +23,8 @@ from peft import PeftModel
 from transformers import (
     AutoTokenizer,
     AutoModelForSeq2SeqLM,
-    pipeline,
+    # Note: `pipeline` removed — transformers 5.x dropped 'summarization' and
+    # 'text2text-generation' pipeline tasks. We call model.generate() directly.
 )
 
 logger = logging.getLogger(__name__)
@@ -88,21 +89,24 @@ def load_bart(device: Optional[str] = None):
     """
     Load facebook/bart-large-cnn as a pretrained summarization baseline.
 
-    Uses HuggingFace pipeline for convenience — internally it uses
-    BeamSearch with the same hyperparameters as our T5-LoRA inference.
+    Note: transformers 5.x removed 'summarization' and 'text2text-generation'
+    pipeline tasks entirely. We load via AutoModelForSeq2SeqLM and call
+    model.generate() directly, exactly like T5-LoRA inference.
+
+    Args:
+        device: "cuda", "cpu", or None (auto-detect)
 
     Returns:
-        HuggingFace `pipeline` object for summarization
+        (model, tokenizer) — both on the selected device
     """
-    device_id = 0 if (torch.cuda.is_available()) else -1
-    logger.info("Loading BART baseline: %s  (device_id: %d)", BART_MODEL, device_id)
-    bart_pipeline = pipeline(
-        "summarization",
-        model=BART_MODEL,
-        device=device_id,
-    )
+    device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+    logger.info("Loading BART baseline: %s  (device: %s)", BART_MODEL, device)
+    tokenizer = AutoTokenizer.from_pretrained(BART_MODEL)
+    model = AutoModelForSeq2SeqLM.from_pretrained(BART_MODEL)
+    model.to(device)
+    model.eval()
     logger.info("BART model ready.")
-    return bart_pipeline
+    return model, tokenizer
 
 
 # ─── Individual model inference functions ─────────────────────────────────────
@@ -153,31 +157,45 @@ def summarize_t5(
 
 def summarize_bart(
     text: str,
-    bart_pipeline,
+    model,
+    tokenizer,
+    device: str = "cpu",
 ) -> tuple[str, float]:
     """
-    Generate a summary using facebook/bart-large-cnn via HuggingFace pipeline.
+    Generate a summary using facebook/bart-large-cnn.
+
+    BART-large-CNN was fine-tuned on CNN/DailyMail directly, so no task
+    prefix is needed. We call model.generate() identically to T5-LoRA.
 
     Args:
-        text:          Raw input article text
-        bart_pipeline: HuggingFace summarization pipeline
+        text:      Raw input article text
+        model:     Loaded BART model
+        tokenizer: Matching BART tokenizer
+        device:    Device string ("cuda" or "cpu")
 
     Returns:
         (summary_text, latency_ms)
     """
-    start_time = time.perf_counter()
-    output = bart_pipeline(
+    inputs = tokenizer(
         text,
-        max_length=GEN_MAX_NEW_TOKENS,
-        min_length=GEN_MIN_LENGTH,
-        num_beams=GEN_NUM_BEAMS,
-        early_stopping=GEN_EARLY_STOPPING,
-        no_repeat_ngram_size=GEN_NO_REPEAT_NGRAM,
+        return_tensors="pt",
+        max_length=1024,   # BART-large supports up to 1024 tokens
         truncation=True,
-    )
+    ).to(device)
+
+    start_time = time.perf_counter()
+    with torch.no_grad():
+        output_ids = model.generate(
+            **inputs,
+            max_new_tokens=GEN_MAX_NEW_TOKENS,
+            min_length=GEN_MIN_LENGTH,
+            num_beams=GEN_NUM_BEAMS,
+            early_stopping=GEN_EARLY_STOPPING,
+            no_repeat_ngram_size=GEN_NO_REPEAT_NGRAM,
+        )
     latency_ms = (time.perf_counter() - start_time) * 1000
 
-    summary = output[0]["summary_text"]
+    summary = tokenizer.decode(output_ids[0], skip_special_tokens=True)
     return summary, round(latency_ms, 2)
 
 
