@@ -1,6 +1,6 @@
 # SummarizationBench-LLM
 
-> **Fine-tuned T5-small using LoRA/PEFT on CNN/DailyMail — benchmarked against BART and Gemini 1.5 Pro**
+> **Fine-tuned T5-small using LoRA/PEFT on CNN/DailyMail — benchmarked against BART (Gemini 1.5 Pro support exists in code but was not evaluated)**
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![HuggingFace](https://img.shields.io/badge/HuggingFace-Transformers-orange)
@@ -17,7 +17,7 @@ This project fine-tunes **T5-small** (60M params) on the CNN/DailyMail summariza
 - 🔴 **BART-large-CNN** — a large pretrained summarization model (~400M params)
 - 🟢 **Gemini 1.5 Pro** — Google's frontier generative model (API)
 
-All three models are evaluated on **100 held-out test samples** using ROUGE-1/2/L and BLEU metrics. Results are served via an interactive **Streamlit dashboard** with live inference, latency profiling, and metric comparison.
+T5-small and BART are evaluated on (Gemini optional, skipped in the reported run) **100 held-out test samples** using ROUGE-1/2/L and BLEU metrics. Results are served via an interactive **Streamlit dashboard** with live inference, latency profiling, and metric comparison.
 
 ### Why LoRA?
 Full fine-tuning of T5-small requires updating all 60M parameters with gradients, demanding ~4–6 GB VRAM. LoRA injects trainable low-rank matrices only into the attention layers (`q`, `v`), reducing trainable parameters to **~0.3M (< 0.5% of total)** — making this runnable on a **free Colab T4 GPU** while matching or exceeding full fine-tuning quality on summarization.
@@ -107,7 +107,12 @@ Epoch 3/3: loss=X.NN  eval_loss=X.NN
 | BART-large-CNN (pretrained) | 0.4320 | 0.2013 | 0.2985 | 0.1254 | 8631 |
 | Gemini 1.5 Pro | N/A* | N/A* | N/A* | N/A* | N/A* |
 
-_*Gemini evaluation was skipped in this run._
+_*Gemini evaluation was skipped in this run (`--skip_gemini`); no Gemini results or claims are made._
+
+**Caveats**
+- Training used 5,000 CNN/DailyMail train samples; evaluation uses only N=100 test samples, so differences of a point or two are within noise (no confidence intervals computed).
+- The latency gap (2274 ms vs 8631 ms) reflects model size (T5-small ~60M vs BART-large ~400M parameters) on a Mac CPU. It is not the result of any inference optimization.
+- Limitation: there is no zero-shot (non-fine-tuned) T5-small baseline, so the gain attributable to LoRA fine-tuning is not measured.
 
 ### To generate your own numbers:
 
@@ -142,22 +147,11 @@ The dashboard provides:
 
 2. **T5's task prefix is critical** — the `"summarize: "` prefix tells T5 which of its pre-trained tasks to activate. Without it, outputs are incoherent despite correct tokenization.
 
-3. **Beam search vs. greedy decoding matters significantly** — switching from greedy (num_beams=1) to beam search (num_beams=4) consistently improved ROUGE-L by several points.
+3. **Beam search vs. greedy decoding matters significantly** — switching from greedy (num_beams=1) to beam search (num_beams=4) is commonly reported to improve ROUGE (not ablated in this repo).
 
 4. **BART is a strong baseline** — trained specifically for summarization on the same dataset, BART-large-CNN sets a challenging bar for a model 7× larger than our fine-tuned T5.
 
-5. **Gemini and ROUGE don't always agree** — Gemini produces fluent, concise summaries that humans prefer, but its ROUGE scores can be lower because it paraphrases instead of extracting spans directly from the article.
-
----
-
-## 📝 Resume Bullet
-
-```
-Fine-tuned T5-small using LoRA/PEFT on CNN/DailyMail (5,000 samples);
-achieved ROUGE-L 0.278 vs BART baseline 0.298 across 100 test samples;
-served interactive model comparison via Streamlit with real-time latency
-profiling. Evaluated with ROUGE-1/2/L and BLEU (100 held-out samples).
-```
+5. **Gemini was not evaluated** — the code supports it, but no Gemini results were produced in this run.
 
 ---
 
