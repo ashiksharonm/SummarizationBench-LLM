@@ -1,0 +1,4 @@
+numpy
+rouge-score
+pytest
+ruff
