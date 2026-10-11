@@ -51,3 +51,11 @@ secrets.yaml
 
 # Streamlit
 .streamlit/secrets.toml
+
+# trained LoRA adapter is small and committed on purpose
+!adapters/**/*.safetensors
+train.log
+*.log
+__pycache__/
+.pytest_cache/
+.ruff_cache/

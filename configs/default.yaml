@@ -1,0 +1,48 @@
+seed: 42
+n_samples: 500            # fixed-seed sample of the CNN/DailyMail 3.0.0 test split
+bootstrap_resamples: 1000
+warmup_articles: 2        # generated first but excluded from latency stats
+batch_size: 1             # latency is measured per article, one article per generate() call
+out_dir: results
+
+train:                    # used only if the adapter below is missing
+  base_model: t5-small
+  adapter_path: adapters/t5_small_lora
+  train_examples: 8000
+  epochs: 1
+  batch_size: 8
+  lr: 3.0e-4
+  max_input_tokens: 512
+  max_target_tokens: 128
+  lora: {r: 8, alpha: 32, dropout: 0.1, target_modules: [q, v]}
+  time_budget_min: 30     # hard stop
+
+models:
+  - name: t5_small_zeroshot
+    label: T5-small zero-shot
+    kind: t5
+    model_id: t5-small
+    max_input_tokens: 512
+    generate: {num_beams: 4, max_new_tokens: 128, no_repeat_ngram_size: 3, early_stopping: true}
+  - name: t5_small_lora
+    label: T5-small + LoRA
+    kind: t5_lora
+    model_id: t5-small
+    adapter_path: adapters/t5_small_lora
+    max_input_tokens: 512
+    generate: {num_beams: 4, max_new_tokens: 128, no_repeat_ngram_size: 3, early_stopping: true}
+  - name: bart_large_cnn
+    label: BART-large-cnn
+    kind: bart
+    model_id: facebook/bart-large-cnn
+    max_input_tokens: 1024
+    # model's own published decoding defaults (4 beams, length_penalty 2.0, min 56 / max 142 tokens)
+    generate: {}
+  - name: qwen25_05b_zeroshot
+    label: Qwen2.5-0.5B-Instruct zero-shot
+    kind: qwen
+    enabled: false        # optional row; set true to include
+    model_id: Qwen/Qwen2.5-0.5B-Instruct
+    max_input_tokens: 1024
+    prompt: "Summarize the following news article in 3 sentences.\n\n{article}"
+    generate: {max_new_tokens: 128, do_sample: false}
